@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
+import { OpenVidu } from 'openvidu-browser';
+
 import { getToken } from '../api/openViduApi';
 
 function useOpenVidu() {
     
     const [session, setSession] = useState(undefined);
-    const [sessionId, setSessionId] = useState('SessionA');
+    const [sessionId, setSessionId] = useState(undefined);
     const [subscriber, setSubscriber] = useState(undefined);
     const [publisher, setPublisher] = useState(undefined);
     const [OV, setOV] = useState(undefined);
@@ -35,7 +37,8 @@ function useOpenVidu() {
       };
     
 
-      const joinSession = () => {
+      const joinSession = title => {
+        setSessionId(title);
         // state won't be updated immediately. We need a callback for
         // when the state is updated. We use useEffect below for this reason.
         let OV = new OpenVidu();
@@ -49,7 +52,7 @@ function useOpenVidu() {
         // We avoid this execution.
         if (session === undefined)
           return;
-    
+
         // On every new Stream received...
         session.on('streamCreated', (event) => {
           let subscriber = session.subscribe(event.stream, undefined);
@@ -58,7 +61,7 @@ function useOpenVidu() {
         });
     
         getToken(sessionId).then(token => {
-    
+
           session.connect(token)
           .then(() => {
             let publisher = OV.initPublisher(undefined);
@@ -72,7 +75,8 @@ function useOpenVidu() {
     
       }, [session, OV, sessionId]);
       
-      return { joinSession, leaveSession};
+      return { joinSession, leaveSession, publisher, subscriber };
+
 };
 
 export default useOpenVidu;
