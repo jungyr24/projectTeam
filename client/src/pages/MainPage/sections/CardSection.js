@@ -8,18 +8,26 @@ function CardSection({ cardData, showWriteModal }) {
     
     const { prevSlide, nextSlide, slideRef } = useSlide({ totalRoom:cardData.length});
     
-    
     const cardList = cardData.map((data, index) => {
          
-        return <li className="card" key={"data" + index} onClick={showWriteModal}>
+        return <li className="card" key={"data" + index} 
+                                    onClick={
+                                        data.sessionModerator ?
+                                        () => showWriteModal(data.sessionId) : null
+                                        
+                                        }>
+
                     <div className="card_img">
                         <div className="card_wrapper">
                                 <div className="card_header">
                                         <AvatarField/>
-                                        {data.title}
+                                        {data.sessionTitle}
                                 </div>
                                 <div className="card_content">
-                                        {data.content}
+                                { data.sessionModerator ?`${data.sessionModerator}님 외 
+                                        ${data.numConnectedObject}명이 대화중입니다.`
+                                : '마이크 아이콘을 클릭하여 방을 만들어 주세요.'
+                                }
                                 </div>
                         </div>
                     </div>

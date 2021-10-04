@@ -9,16 +9,15 @@ import { UserOutlined, VideoCameraOutlined,
 
 import './OpenViduFooter.css';
 
-function OpenViduFooter({onLayoutHandler}) {
+function OpenViduFooter({publisher, onLayoutHandler, leaveSession}) {
 
     const history = useHistory();
 
-    const { leaveSession, publisher,CamerState, setCamerState,
+    const { CamerState, setCamerState,
             MicState, setMicState } = useContextOpv();
 
     const onCameraHandler = () => {
         publisher.publishVideo(!CamerState);
-
         setCamerState(!CamerState);
     };
 
@@ -30,10 +29,7 @@ function OpenViduFooter({onLayoutHandler}) {
     const onCloseHandler = () => {
         setCamerState(false)
         setMicState(false);
-
-        history.push('/');
         leaveSession();
-
     };
 
     return (
