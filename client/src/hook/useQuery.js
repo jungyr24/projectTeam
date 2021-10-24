@@ -17,7 +17,7 @@ const useQuery = (endpoint) => {
 
       dispatch(loading_actions.loadingStart());
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`;
       const response = await axios.get(URL + endpoint);
 
 
@@ -33,9 +33,9 @@ const useQuery = (endpoint) => {
 
       dispatch(loading_actions.loadingReset());
       const { status } = error.response;
-
       if (status === 401) {
         alert('로그인 하세요');
+        console.log("zz")
         history.push('/');
       } else if  (status >= 400) {
         history.replace(history.location.pathname, { errorStatusCode: status,
